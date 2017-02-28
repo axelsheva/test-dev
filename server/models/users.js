@@ -7,18 +7,30 @@ const UsersSchema = new Schema({
   isAdmin: Boolean
 })
 
+const getHash = async (password) => {
+  const salt = await bcrypt.genSalt(10)
+  const hash = await bcrypt.hash(password, salt)
+  return hash
+}
+
 UsersSchema.pre("save", async function(next) {
   if (!this.isModified("password")) {
     return next()
   }
-  const salt = await bcrypt.genSalt(10)
-  const hash = await bcrypt.hash(this.password, salt)
-  this.password = hash
+  this.password = await getHash(this.password)
   next()
 })
 
 UsersSchema.methods.comparePasswords = function(password) {
   return bcrypt.compare(password, this.password)
 }
+
+UsersSchema.pre("updateOne", async function(next) {
+  if (!this._update.$set.password) {
+    return next()
+  }
+  this._update.$set.password = await getHash(this._update.$set.password)
+  next()
+})
 
 export default mongoose.model("Users", UsersSchema)

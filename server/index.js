@@ -8,8 +8,6 @@ import authRoute from './routes/auth'
 import usersRoute from './routes/users'
 import newsRoute from './routes/news'
 import errorHandler from './middlewares/errorHandler'
-import checkToken from './middlewares/checkToken'
-import getUser from './middlewares/getUser'
 
 const app = express()
 
@@ -27,8 +25,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/api', authRoute)
-app.use(checkToken)
-app.use(getUser)
 app.use('/api', usersRoute)
 app.use('/api', newsRoute)
 

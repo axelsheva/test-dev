@@ -1,20 +1,8 @@
 import * as UsersService from '../services/users'
 import Users from '../models/users'
 
-import checkAdmin from '../middlewares/checkAdmin'
-
 export async function getCurrentUser(req, res, next) {
-  const { token } = req
-
-  let user
-  try {
-    user = await UsersService.getUserByToken(token)
-  } catch ({ message }) {
-    return next({
-      status: 500,
-      message
-    })
-  }
+  const { user } = req
   return res.json(user)
 }
 
@@ -48,13 +36,12 @@ export async function get(req, res, next) {
 }
 
 export async function put(req, res, next) {
-  if (!checkAdmin(req.user))
+  const _id = req.params.id
+  if (req.user._id.toString() !== _id && !req.user.isAdmin)
     return next({
       status: 403,
-      message: 'Forbidden'
+      message: 'Permission denied'
     })
-
-  const _id = req.params.id
   const body = req.body
   try {
     await Users.updateOne({ _id }, body)
@@ -68,13 +55,12 @@ export async function put(req, res, next) {
 }
 
 export async function remove(req, res, next) {
-  if (!checkAdmin(req.user))
+  if (!req.user.isAdmin)
     return next({
       status: 403,
-      message: 'Forbidden. No token!'
+      message: 'Permission denied'
     })
-
-  const _id = req.body.id
+  const _id = req.params.id
   let user
   try {
     user = await Users.findOne({ _id })

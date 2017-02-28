@@ -1,16 +1,16 @@
-import * as UsersService from '../services/users'
+import * as UserService from '../services/users'
 
 export default async (req, res, next) => {
   const { token } = req
-
-  if (token == null)
-    return next()
-
   let user
   try {
-    user = await UsersService.getUserByToken(token)
+    user = await UserService.getUserByToken(token)
   } catch ({ message }) {
-    return next()
+    req.user = null
+    return next({
+      status: 500,
+      message
+    })
   }
   req.user = user
   next()
