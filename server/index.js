@@ -2,6 +2,9 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import bluebird from 'bluebird'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
+import connectMongo from 'connect-mongo'
 
 import config from './config'
 import authRoute from './routes/auth'
@@ -21,6 +24,19 @@ mongoose.connect(config.database, err => {
   })
 })
 
+const MongoStore = connectMongo(session)
+app.use(cookieParser())
+app.use(session({
+  secret: config.secret,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  }),
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 

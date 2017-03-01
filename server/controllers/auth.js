@@ -5,16 +5,16 @@ import config from '../config'
 
 export const signup = async (req, res, next) => {
   const data = req.body
-  let user
   try {
-    user = await Users.create(data);
+    const user = await Users.create(data)
   } catch ({ message }) {
     return next({
       status: 400,
       message
     })
   }
-  res.json(user)
+  req.session = user
+  res.sendStatus(200)
 }
 
 export const signin = async (req, res, next) => {
@@ -27,13 +27,13 @@ export const signin = async (req, res, next) => {
     })
   }
   try {
-    const result = await user.comparePasswords(password)
+    await user.comparePasswords(password)
   } catch (e) {
     return next({
       status: 400,
       message: 'Bad data'
     })
   }
-  const token = jwt.sign({ _id: user._id }, config.secret)
-  res.json(token)
+  req.session.user = user
+  res.sendStatus(200)
 }

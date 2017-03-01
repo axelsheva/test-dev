@@ -1,24 +1,8 @@
-import * as UsersService from '../services/users'
 import Users from '../models/users'
 
 export async function getCurrentUser(req, res, next) {
-  const { user } = req
-  return res.json(user)
-}
-
-export async function create(req, res, next) {
-  const userData = req.body
-
-  let user
-  try {
-    user = await Users.create(userData)
-  } catch ({ message }) {
-    return next({
-      status: 400,
-      message
-    })
-  }
-  res.json(user)
+  const session = req.session
+  return res.json(session.user)
 }
 
 export async function get(req, res, next) {
@@ -32,12 +16,19 @@ export async function get(req, res, next) {
       message
     })
   }
+  if (!user) {
+    return next({
+      status: 404,
+      message: 'User not found'
+    })
+  }
   res.json(user)
 }
 
 export async function put(req, res, next) {
   const _id = req.params.id
-  if (req.user._id.toString() !== _id && !req.user.isAdmin)
+  const session = req.session
+  if (session.user._id.toString() !== _id && !session.user.isAdmin)
     return next({
       status: 403,
       message: 'Permission denied'
@@ -51,11 +42,12 @@ export async function put(req, res, next) {
       message
     })
   }
-  res.json({ message: 'success' })
+  res.sendStatus(200)
 }
 
 export async function remove(req, res, next) {
-  if (!req.user.isAdmin)
+  const session = req.session
+  if (!session.user.isAdmin)
     return next({
       status: 403,
       message: 'Permission denied'
@@ -84,7 +76,7 @@ export async function remove(req, res, next) {
       message
     })
   }
-  res.json({ message: 'success' })
+  res.sendStatus(200)
 }
 
 export async function all(req, res, next) {
