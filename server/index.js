@@ -12,10 +12,17 @@ import usersRoute from './routes/users'
 import newsRoute from './routes/news'
 import errorHandler from './middlewares/errorHandler'
 
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', `http://${config.host}:3000`)
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  next()
+}
+
 const app = express()
 
 mongoose.Promise = bluebird
-mongoose.connect(config.database, err => {
+mongoose.connect(`${config.host}/${config.database}`, err => {
   if (err) throw err
   console.log('Mongo connected')
   app.listen(config.port, err => {
@@ -40,6 +47,7 @@ app.use(session({
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(allowCrossDomain)
 app.use('/api', authRoute)
 app.use('/api', usersRoute)
 app.use('/api', newsRoute)

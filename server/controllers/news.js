@@ -20,10 +20,10 @@ export async function create(req, res, next) {
 }
 
 export async function get(req, res, next) {
-  const id = req.params.id
+  const _id = req.params.id
   let news
   try {
-    news = await News.findOne({ id })
+    news = await News.findOne({ _id })
   } catch ({ message }) {
     return next({
       status: 500,
