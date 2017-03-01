@@ -8,7 +8,7 @@ import Content from '../components/Content'
 import Sidebar from '../components/Sidebar'
 import NewsList from '../components/NewsList'
 
-const Main = ({ news, changeSearchString }) => {
+const Main = ({ news, changeSearchString, activePage, pageChange }) => {
   return (
     <Content>
       <Row>
@@ -19,7 +19,11 @@ const Main = ({ news, changeSearchString }) => {
         </Col>
         <Col xs={12} sm={8} md={9} lg={9}>
           <Panel>
-            <NewsList newsArray={news.data} searchString={news.searchString} />
+            <NewsList
+              newsArray={news.data}
+              searchString={news.searchString}
+              activePage={activePage}
+              pageChange={pageChange} />
           </Panel>
         </Col>
       </Row>
@@ -29,25 +33,32 @@ const Main = ({ news, changeSearchString }) => {
 
 const mapStateToProps = (state, ownProps) => {
   const { news } = state,
-    pageNumber = Number(ownProps.params.id) || 1
+    activePage = Number(ownProps.params.id) || 1
 
   return {
-    pageNumber,
+    activePage,
     news
   }
 }
 
 Main.propTypes = {
   news: PropTypes.object.isRequired,
-  changeSearchString: PropTypes.func.isRequired
+  changeSearchString: PropTypes.func.isRequired,
+  pageChange: PropTypes.func.isRequired,
+  activePage: PropTypes.number
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchNews: () => {
       dispatch(fetchNews())
     },
+    pageChange: (page) => {
+      ownProps.router.push('/page/' + page)
+    },
     changeSearchString: (searchString) => {
+      if (ownProps.location.pathname !== '/')
+        ownProps.router.push('/')
       dispatch(searchNews(searchString))
     }
   }

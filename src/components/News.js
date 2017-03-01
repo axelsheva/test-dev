@@ -5,7 +5,9 @@ const News = ({ news }) => {
   return (
     <Panel className="news">
       <h4>{news.title}</h4>
-      <div className="news-body">{news.body}</div>
+      {news.body.split(/\\r\\n|\\r|\\n/g).map((line, index) => {
+        return <p key={index}>{line}</p>
+      })}
     </Panel>
   )
 }

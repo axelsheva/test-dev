@@ -23,6 +23,14 @@ h4:first-letter {
   text-transform: uppercase;
 }
 
+p:first-letter {
+  text-transform: uppercase;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
 .navbar {
   border-radius: 0;
 }
@@ -32,9 +40,9 @@ h4:first-letter {
 }
 
 .news h4 {
-  margin: 0 0 5px;
+  margin-top: 0;
 }
 
-.news-body:first-letter {
-  text-transform: uppercase;
+.pagination {
+  margin: 0;
 }
