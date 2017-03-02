@@ -1,55 +1,65 @@
 import React, { PropTypes } from 'react'
 import { Alert, Glyphicon } from 'react-bootstrap'
 
-import News from './News'
 import PaginationAdvanced from './PaginationAdvanced'
+import News from './News'
 
-const NEWS_PER_PAGE = 15
+const NewsList = ({ news, activePage, pageChange, newsPerPage, fetchNews }) => {
+  if (!news.fetched && !news.fetching && !news.error) fetchNews()
 
-const NewsList = ({ newsArray, searchString, activePage, pageChange }) => {
-  activePage = activePage ? activePage : 1
-  const newsArrayFiltered = newsArray.filter(news => news.title.toLowerCase().includes(searchString.toLowerCase()))
-  const pages = Math.ceil(newsArrayFiltered.length / NEWS_PER_PAGE)
-  const startOffset = (activePage - 1) * NEWS_PER_PAGE
-  let startCount = 0
-
-  const pagination = (
-    <div className="text-center">
-      <PaginationAdvanced
-        items={pages}
-        pageChange={pageChange}
-        activePage={activePage} />
-    </div>
-  )
-
-  const loadingAlert = (
+  const LoadingAlert = () => (
     <Alert bsStyle="info">
       <Glyphicon glyph="refresh" /> Loading...
     </Alert>
   )
 
-  const failedSearchAlert = (
+  const ErrorAlert = () => (
+    <Alert bsStyle="warning">
+      {news.error.toString()}
+    </Alert>
+  )
+
+  const FailedSearchAlert = () => (
     <Alert bsStyle="danger">
       Sorry, no results were found.
     </Alert>
   )
 
+  if (news.fetching) return <LoadingAlert />
+  if (news.error) return <ErrorAlert />
+
+  activePage = activePage || 1
+  newsPerPage = newsPerPage || 15
+
+  const hasSearch = news.searchString !== ''
+  const filteredNews = hasSearch ?
+    news.data.filter(_news => _news.title.toLowerCase().includes(news.searchString.toLowerCase())) :
+    news.data
+
+  if (!filteredNews.length) return <FailedSearchAlert />
+
+  const pageCount = Math.ceil(filteredNews.length / newsPerPage)
+  const offset = (activePage - 1) * newsPerPage
+
   return (
     <div>
-      {newsArrayFiltered.map((news, index) => {
-        if (index >= startOffset && startCount++ < NEWS_PER_PAGE)
-          return <News key={index} news={news} />
-        return false
-      })}
-      {pages ? pagination : searchString !== '' ? failedSearchAlert : loadingAlert}
+      {filteredNews.slice(offset, newsPerPage).map((news, index) => (
+        <News key={index} news={news} />
+      ))}
+      <PaginationAdvanced
+        items={pageCount}
+        pageChange={pageChange}
+        activePage={activePage} />
     </div>
   )
 }
 
 NewsList.propTypes = {
-  newsArray: PropTypes.array.isRequired,
-  searchString: PropTypes.string.isRequired,
-  activePage: PropTypes.number
+  news: PropTypes.object.isRequired,
+  fetchNews: PropTypes.func.isRequired,
+  activePage: PropTypes.number,
+  newsPerPage: PropTypes.number,
+  pageChange: PropTypes.func.isRequired
 }
 
 export default NewsList

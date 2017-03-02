@@ -8,22 +8,22 @@ import Content from '../components/Content'
 import Sidebar from '../components/Sidebar'
 import NewsList from '../components/NewsList'
 
-const Main = ({ news, changeSearchString, activePage, pageChange }) => {
+const Main = ({ news, onSearch, activePage, onPageChange, onFetchNews }) => {
   return (
     <Content>
       <Row>
         <Col xs={12} sm={4} md={3} lg={3}>
           <Panel>
-            <Sidebar onSearch={changeSearchString} />
+            <Sidebar search={onSearch} />
           </Panel>
         </Col>
         <Col xs={12} sm={8} md={9} lg={9}>
           <Panel>
             <NewsList
-              newsArray={news.data}
-              searchString={news.searchString}
+              news={news}
               activePage={activePage}
-              pageChange={pageChange} />
+              pageChange={onPageChange}
+              fetchNews={onFetchNews} />
           </Panel>
         </Col>
       </Row>
@@ -43,32 +43,27 @@ const mapStateToProps = (state, ownProps) => {
 
 Main.propTypes = {
   news: PropTypes.object.isRequired,
-  changeSearchString: PropTypes.func.isRequired,
-  pageChange: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onFetchNews: PropTypes.func.isRequired,
   activePage: PropTypes.number
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchNews: () => {
+    onFetchNews: () => {
       dispatch(fetchNews())
     },
-    pageChange: (page) => {
+    onPageChange: (page) => {
       ownProps.router.push('/page/' + page)
     },
-    changeSearchString: (searchString) => {
-      if (ownProps.location.pathname !== '/')
-        ownProps.router.push('/')
-      dispatch(searchNews(searchString))
+    onSearch: (value) => {
+      const mainPath = '/'
+      if (ownProps.router.location.pathname !== mainPath)
+        ownProps.router.push(mainPath)
+      dispatch(searchNews(value))
     }
   }
 }
 
-const mergeProps = (state, dispatch) => {
-  if (!state.news.data.length && !state.news.fetching && !state.news.error)
-    dispatch.fetchNews()
-
-  return Object.assign(state, {...dispatch, fetchNews: null})
-}
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Main)
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

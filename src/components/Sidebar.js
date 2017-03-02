@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
 import Search from './Search'
 
-const Sidebar = ({ onSearch }) => {
+const Sidebar = ({ search }) => {
   return (
-    <Search onSearch={onSearch} />
+    <Search search={search} />
   )
+}
+
+Sidebar.propTypes = {
+  search: PropTypes.func.isRequired
 }
 
 export default Sidebar

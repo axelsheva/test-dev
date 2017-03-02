@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
 import { FormGroup, InputGroup, Button, Glyphicon } from 'react-bootstrap'
 
-const Search = ({ onSearch }) => {
+const Search = ({ search }) => {
   let searchInput
 
   const btnClick = () => {
-    onSearch(searchInput.value)
+    search(searchInput.value)
   }
 
   const onSubmit = (e) => {
@@ -30,7 +30,7 @@ const Search = ({ onSearch }) => {
 }
 
 Search.propTypes = {
-  onSearch: PropTypes.func.isRequired
+  search: PropTypes.func.isRequired
 }
 
 export default Search

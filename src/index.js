@@ -14,3 +14,13 @@ render(
   <App store={store} />,
   document.getElementById('root')
 )
+
+if (module.hot) {
+  module.hot.accept('./containers/App', () => {
+    const NextApp = require('./containers/App').default
+    render(
+      <NextApp store={store} />,
+      document.getElementById('root')
+    )
+  })
+}
