@@ -2,10 +2,17 @@ import User from '../models/users'
 import News from '../models/news'
 
 export async function create(req, res, next) {
-  const newsData = req.body
-  const session = req.session
+  if (!req.user) {
+    return next({
+      status: 403,
+      message: 'Forbidden. No token!'
+    })
+  }
 
-  newsData.userId = session.user._id
+  const newsData = req.body
+  const userId = req.user._id
+
+  newsData.userId = userId
 
   let news
   try {
@@ -35,8 +42,7 @@ export async function get(req, res, next) {
 
 export async function put(req, res, next) {
   const _id = req.params.id
-  const session = req.session
-  if (session.user._id.toString() !== _id && !session.user.isAdmin)
+  if (req.user._id.toString() !== _id && !req.user.isAdmin)
     return next({
       status: 403,
       message: 'Permission denied'
@@ -55,7 +61,12 @@ export async function put(req, res, next) {
 
 export async function remove(req, res, next) {
   const _id = req.params.id
-  const session = req.session
+  if (req.user._id.toString() !== _id && !req.user.isAdmin)
+    return next({
+      status: 403,
+      message: 'Permission denied'
+    })
+  const userId = req.user._id
   let news
   try {
     news = await News.findOne({ _id })
@@ -71,7 +82,7 @@ export async function remove(req, res, next) {
       message: 'News not found'
     })
   }
-  if (session.user._id.toString() !== news.userId && !session.user.isAdmin) {
+  if (userId.toString() !== news.userId.toString() || !req.user.isAdmin) {
     return next({
       status: 403,
       message: 'Permission denied'
