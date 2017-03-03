@@ -1,15 +1,34 @@
 import React from 'react'
-import { Form, FormGroup, Col, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import { Form, FormGroup, Col, ControlLabel, Button, Alert } from 'react-bootstrap'
 
-const AuthForm = ({ handleSubmit }) => {
+const AuthForm = ({ handleSubmit, authError }) => {
+  const ErrorAlert = () => (
+    <Alert bsStyle="warning">
+      {authError}
+    </Alert>
+  )
+
+  let usernameInput
+  let passwordInput
+  let error = authError ? ErrorAlert() : null
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    handleSubmit({
+      username: usernameInput.value,
+      password: passwordInput.value
+    })
+  }
+
   return (
-    <Form onSubmit={handleSubmit}  horizontal>
+    <Form onSubmit={onSubmit} horizontal>
+      {error}
       <FormGroup controlId="formHorizontalEmail">
         <Col componentClass={ControlLabel} sm={2}>
-          Email
+          Username
         </Col>
         <Col sm={10}>
-          <FormControl type="email" placeholder="Email" />
+          <input className="form-control" name="username" type="text" placeholder="Username" ref={(input) => {usernameInput = input}} />
         </Col>
       </FormGroup>
       <FormGroup controlId="formHorizontalPassword">
@@ -17,12 +36,7 @@ const AuthForm = ({ handleSubmit }) => {
           Password
         </Col>
         <Col sm={10}>
-          <FormControl type="password" placeholder="Password" />
-        </Col>
-      </FormGroup>
-      <FormGroup>
-        <Col smOffset={2} sm={10}>
-          <Checkbox>Remember me</Checkbox>
+          <input className="form-control" type="password" placeholder="Password" ref={(input) => {passwordInput = input}} />
         </Col>
       </FormGroup>
       <FormGroup>

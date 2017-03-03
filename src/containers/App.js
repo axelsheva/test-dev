@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import MainPage from './Main'
 import RegPage from './Registration'
 import AuthPage from './Auth'
+import LogoutPage from './Logout'
 
 const App = ({ store }) => (
   <Provider store={store}>
@@ -14,6 +15,7 @@ const App = ({ store }) => (
       <Route path="/page/:id" component={MainPage} />
       <Route path="/registration" component={RegPage} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/logout" component={LogoutPage} />
     </Router>
   </Provider>
 )

@@ -7,7 +7,7 @@ export const fetchNews = () => {
   return dispatch => {
     dispatch({
       type: FETCH_NEWS,
-      payload: axios.get(`http://${API.host}:${API.port}/api/news`)
+      payload: axios.get(API.news, { withCredentials: true })
     })
   }
 }

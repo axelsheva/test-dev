@@ -40,10 +40,10 @@ const NewsList = ({ news, activePage, pageChange, newsPerPage, fetchNews }) => {
 
   const pageCount = Math.ceil(filteredNews.length / newsPerPage)
   const offset = (activePage - 1) * newsPerPage
-
+  
   return (
     <div>
-      {filteredNews.slice(offset, newsPerPage).map((news, index) => (
+      {filteredNews.slice(offset, offset + newsPerPage).map((news, index) => (
         <News key={index} news={news} />
       ))}
       <PaginationAdvanced

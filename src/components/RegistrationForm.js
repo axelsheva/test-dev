@@ -1,15 +1,26 @@
 import React from 'react'
-import { Form, FormGroup, Col, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Form, FormGroup, Col, ControlLabel, Button } from 'react-bootstrap'
 
 const RegistrationForm = ({ handleSubmit }) => {
+  let usernameInput
+  let passwordInput
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    handleSubmit({
+      username: usernameInput.value,
+      password: passwordInput.value
+    })
+  }
+
   return (
-    <Form onSubmit={handleSubmit} horizontal>
+    <Form onSubmit={onSubmit} horizontal>
       <FormGroup controlId="formHorizontalEmail">
         <Col componentClass={ControlLabel} sm={2}>
-          Email
+          Username
         </Col>
         <Col sm={10}>
-          <FormControl name="email" type="email" placeholder="Email" />
+          <input className="form-control" name="username" type="text" placeholder="Username" ref={(input) => {usernameInput = input}} />
         </Col>
       </FormGroup>
       <FormGroup controlId="formHorizontalPassword">
@@ -17,7 +28,7 @@ const RegistrationForm = ({ handleSubmit }) => {
           Password
         </Col>
         <Col sm={10}>
-          <FormControl type="password" placeholder="Password" />
+          <input className="form-control" type="password" placeholder="Password" ref={(input) => {passwordInput = input}} />
         </Col>
       </FormGroup>
       <FormGroup>

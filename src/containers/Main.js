@@ -4,7 +4,7 @@ import { Panel, Row, Col } from 'react-bootstrap'
 
 import { fetchNews, searchNews } from '../actions/News'
 
-import Content from '../components/Content'
+import Content from './Content'
 import Sidebar from '../components/Sidebar'
 import NewsList from '../components/NewsList'
 
@@ -23,7 +23,8 @@ const Main = ({ news, onSearch, activePage, onPageChange, onFetchNews }) => {
               news={news}
               activePage={activePage}
               pageChange={onPageChange}
-              fetchNews={onFetchNews} />
+              fetchNews={onFetchNews}
+              newsPerPage={15} />
           </Panel>
         </Col>
       </Row>

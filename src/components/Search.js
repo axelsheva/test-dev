@@ -9,8 +9,8 @@ const Search = ({ search }) => {
   }
 
   const onSubmit = (e) => {
-    btnClick()
     e.preventDefault()
+    btnClick()
   }
 
   return (

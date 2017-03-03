@@ -3,7 +3,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 
-const Header = () => (
+const Header = ({ loggedIn }) => (
   <Navbar collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
@@ -12,14 +12,22 @@ const Header = () => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      <Nav pullRight>
-        <LinkContainer to={{ pathname: '/registration' }}>
-          <NavItem>Registration</NavItem>
-        </LinkContainer>
-        <LinkContainer to={{ pathname: '/auth' }}>
-          <NavItem>Auth</NavItem>
-        </LinkContainer>
-      </Nav>
+      {loggedIn ? (
+        <Nav pullRight>
+          <LinkContainer to={{ pathname: '/logout' }}>
+            <NavItem>LogOut</NavItem>
+          </LinkContainer>
+        </Nav>
+      ) : (
+        <Nav pullRight>
+          <LinkContainer to={{ pathname: '/registration' }}>
+            <NavItem>Registration</NavItem>
+          </LinkContainer>
+          <LinkContainer to={{ pathname: '/auth' }}>
+            <NavItem>Auth</NavItem>
+          </LinkContainer>
+        </Nav>
+      )}
     </Navbar.Collapse>
   </Navbar>
 )
