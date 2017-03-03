@@ -11,7 +11,7 @@ export default async (req, res, next) => {
     })
   let tokenObj
   try {
-    tokenObj = jwt.verify(token, config.secret)
+    tokenObj = jwt.verify(token, config.session.secret)
   } catch ({ message }) {
     return next({
       status: 400,

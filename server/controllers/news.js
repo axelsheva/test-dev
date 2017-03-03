@@ -2,13 +2,6 @@ import User from '../models/users'
 import News from '../models/news'
 
 export async function create(req, res, next) {
-  if (!req.user) {
-    return next({
-      status: 403,
-      message: 'Forbidden. No token!'
-    })
-  }
-
   const newsData = req.body
   const userId = req.user._id
 

@@ -6,13 +6,11 @@ import getUser from '../middlewares/getUser'
 
 const router = express.Router()
 
-router.post("/users", UserController.create)
+router.get('/current-user', UserController.getCurrentUser)
 router.get("/users", UserController.all)
 router.get("/users/:id", UserController.get)
-router.use(checkToken)
-router.use(getUser)
-router.get('/current-user', UserController.getCurrentUser)
-router.put("/users/:id", UserController.put)
-router.delete("/users/:id", UserController.remove)
+router.post("/users", checkToken, getUser, UserController.create)
+router.put("/users/:id", checkToken, getUser, UserController.put)
+router.delete("/users/:id", checkToken, getUser, UserController.remove)
 
 export default router

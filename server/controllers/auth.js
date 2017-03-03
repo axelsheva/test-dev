@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-import Users from '../models/users'
 import config from '../config'
+import Users from '../models/users'
 
 export const signup = async (req, res, next) => {
   const data = req.body
@@ -14,7 +14,9 @@ export const signup = async (req, res, next) => {
       message
     })
   }
-  res.json(user)
+  req.session.userId = user._id
+  const token = jwt.sign({ _id: user._id }, config.session.secret)
+  res.json(token)
 }
 
 export const signin = async (req, res, next) => {
@@ -22,7 +24,7 @@ export const signin = async (req, res, next) => {
   const user = await Users.findOne({ username })
   if(!user) {
     return next({
-      status: 400,
+      status: 404,
       message: 'User not found'
     })
   }
@@ -34,6 +36,7 @@ export const signin = async (req, res, next) => {
       message: 'Bad data'
     })
   }
-  const token = jwt.sign({ _id: user._id }, config.secret)
+  req.session.userId = user._id
+  const token = jwt.sign({ _id: user._id }, config.session.secret)
   res.json(token)
 }
