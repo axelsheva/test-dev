@@ -22,7 +22,7 @@ class Auth extends Component {
         <Panel>
           <Row>
             <Col xs={12} smOffset={2} sm={8} mdOffset={3} md={6} lgOffset={3} lg={6}>
-              <AuthForm handleSubmit={this.props.handleSubmit} authError={this.props.authError} />
+              <AuthForm handleSubmit={this.props.handleSubmit} errorMessage={this.props.errorMessage} />
             </Col>
           </Row>
         </Panel>
@@ -33,10 +33,10 @@ class Auth extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { auth } = state
-  const authError = auth.error ? auth.error.response.data.message : null
+  const errorMessage = auth.error ? auth.error.response.data.message : null
 
   return {
-    authError,
+    errorMessage,
     isLoggedIn: !!auth.token
   }
 }
