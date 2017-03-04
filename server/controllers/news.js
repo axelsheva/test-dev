@@ -1,7 +1,7 @@
 import User from '../models/users'
 import News from '../models/news'
 
-export async function create(req, res, next) {
+export const create = async (req, res, next) => {
   const newsData = req.body
   const userId = req.user._id
 
@@ -19,7 +19,7 @@ export async function create(req, res, next) {
   res.json(news)
 }
 
-export async function get(req, res, next) {
+export const get = async (req, res, next) => {
   const _id = req.params.id
   let news
   try {
@@ -33,7 +33,7 @@ export async function get(req, res, next) {
   res.json(news)
 }
 
-export async function put(req, res, next) {
+export const put = async (req, res, next) => {
   const _id = req.params.id
   if (req.user._id.toString() !== _id && !req.user.isAdmin)
     return next({
@@ -52,7 +52,7 @@ export async function put(req, res, next) {
   res.json({ message: 'success' })
 }
 
-export async function remove(req, res, next) {
+export const remove = async (req, res, next) => {
   const _id = req.params.id
   if (req.user._id.toString() !== _id && !req.user.isAdmin)
     return next({
@@ -92,7 +92,7 @@ export async function remove(req, res, next) {
   res.json({ message: 'success' })
 }
 
-export async function all(req, res, next) {
+export const all = async (req, res, next) => {
   let news
   try {
     news = await News.find({})

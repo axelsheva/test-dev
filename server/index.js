@@ -30,6 +30,7 @@ const MongoStore = connectMongo(session)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.set('trust proxy', 1)
 app.use(cookieParser())
 app.use(session({
   ...config.session,

@@ -1,12 +1,12 @@
 import * as UsersService from '../services/users'
 import Users from '../models/users'
 
-export async function getCurrentUser(req, res, next) {
+export const getCurrentUser = async (req, res, next) => {
   const { user } = req
   return res.json(user)
 }
 
-export async function create(req, res, next) {
+export const create = async (req, res, next) => {
   const userData = req.body
 
   let user
@@ -21,7 +21,7 @@ export async function create(req, res, next) {
   res.json(user)
 }
 
-export async function get(req, res, next) {
+export const get = async (req, res, next) => {
   const _id = req.params.id
   let user
   try {
@@ -35,7 +35,7 @@ export async function get(req, res, next) {
   res.json(user)
 }
 
-export async function put(req, res, next) {
+export const put = async (req, res, next) => {
   const _id = req.params.id
   if (req.user._id.toString() !== _id && !req.user.isAdmin)
     return next({
@@ -54,7 +54,7 @@ export async function put(req, res, next) {
   res.json({ message: 'success' })
 }
 
-export async function remove(req, res, next) {
+export const remove = async (req, res, next) => {
   if (!req.user.isAdmin)
     return next({
       status: 403,
@@ -87,7 +87,7 @@ export async function remove(req, res, next) {
   res.json({ message: 'success' })
 }
 
-export async function all(req, res, next) {
+export const all = async (req, res, next) => {
   let users
   try {
     users = await Users.find({})

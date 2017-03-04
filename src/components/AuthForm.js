@@ -1,16 +1,16 @@
 import React from 'react'
 import { Form, FormGroup, Col, ControlLabel, Button, Alert } from 'react-bootstrap'
 
-const AuthForm = ({ handleSubmit, authError }) => {
+const AuthForm = ({ handleSubmit, errorMessage }) => {
   const ErrorAlert = () => (
     <Alert bsStyle="warning">
-      {authError}
+      {errorMessage}
     </Alert>
   )
-
+  
   let usernameInput
   let passwordInput
-  let error = authError ? ErrorAlert() : null
+  let error = errorMessage ? ErrorAlert() : null
 
   const onSubmit = (e) => {
     e.preventDefault()

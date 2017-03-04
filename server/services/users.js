@@ -1,6 +1,6 @@
 import Users from '../models/users';
 
-export async function getUserByToken(token) {
+export const getUserByToken = async (token) => {
   const { _id } = token;
   let user;
   try {
